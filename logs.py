@@ -112,3 +112,39 @@ unused_objects_with_flags_df = unused_objects_df.withColumn(
 
 # Show the results
 unused_objects_with_flags_df.show()
+
+
+
+
+
+
+
+
+
+=========================================================================================
+
+from pyspark.sql import functions as F
+
+# Load and cache the DataFrame
+df = spark.table("your_table_name").cache()
+
+# Filter and select necessary columns early
+df_filtered = df.select("object_id", "event_time").filter(df.event_time.isNotNull())
+
+# Group and aggregate
+unused_objects_df = df_filtered.groupBy("object_id").agg(
+    F.max("event_time").alias("last_used_time")
+).filter(
+    (F.max("event_time") < F.date_sub(F.current_date(), 180)) | 
+    (F.max("event_time") < F.date_sub(F.current_date(), 365))
+)
+
+# Add the flag column
+unused_objects_with_flags_df = unused_objects_df.withColumn(
+    "unused_interval",
+    F.when(F.col("last_used_time") < F.date_sub(F.current_date(), 365), "1y")
+     .when(F.col("last_used_time") < F.date_sub(F.current_date(), 180), "6m")
+)
+
+# Write to a new table
+unused_objects_with_flags_df.write.mode("overwrite").saveAsTable("your_new_table_name")
