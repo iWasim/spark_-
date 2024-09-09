@@ -86,3 +86,29 @@ You can then follow the previous instructions to schedule this notebook to run e
 Additional Notes:
 Using a temporary view helps reduce the amount of data processed in subsequent queries, improving performance.
 Make sure to replace your_table_name and your_new_table_name with the appropriate names for your use case.
+
+
+==========================================================================================================================
+
+    from pyspark.sql import functions as F
+
+# Get the current date
+current_date = F.current_date()
+
+# Calculate last used time and flag
+unused_objects_df = df.groupBy("object_id").agg(
+    F.max("event_time").alias("last_used_time")
+).filter(
+    (F.max("event_time") < F.date_sub(current_date, 180)) | 
+    (F.max("event_time") < F.date_sub(current_date, 365))
+)
+
+# Add the flag column
+unused_objects_with_flags_df = unused_objects_df.withColumn(
+    "unused_interval",
+    F.when(F.col("last_used_time") < F.date_sub(current_date, 365), "1y")
+     .when(F.col("last_used_time") < F.date_sub(current_date, 180), "6m")
+)
+
+# Show the results
+unused_objects_with_flags_df.show()
