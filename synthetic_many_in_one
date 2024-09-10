@@ -806,3 +806,576 @@ CREATE TABLE CostDetails(
 	IsActive BIT,
 	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID),
 	BillingID INT FOREIGN KEY REFERENCES BillingDetails(BillingID))
+
+
+
+
+=========================================================================================================================
+===========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+import os
+
+# Initialize Faker
+fake = Faker()
+
+# Function to create synthetic data for EventDetails
+def create_event_details(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        event_id = _  # Assuming EventID is sequential
+        timestamp = fake.date_time_this_decade()
+        event_type = random.choice(['Alert', 'Warning', 'Info'])[:15]  # Max 15 chars
+        source = fake.word()[:20]  # Max 20 chars
+        severity = random.choice(['Low', 'Medium', 'High'])[:25]  # Max 25 chars
+        status = random.choice(['Acknowledged', 'Unacknowledged'])[:15]  # Max 15 chars
+        description = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        location = fake.city()[:50]  # Max 50 chars
+        acknowledged_by = fake.name()[:50]  # Max 50 chars
+        acknowledged_timestamp = fake.date_time_this_decade()
+        resolution_details = fake.text(max_nb_chars=200)[:100]  # Max 100 chars
+        resolution_timestamp = fake.date_time_this_decade()
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)
+
+        # Append the synthetic entry to the data list
+        data.append([
+            event_id, timestamp, event_type, source, severity, status,
+            description, location, acknowledged_by, acknowledged_timestamp,
+            resolution_details, resolution_timestamp, additional_details,
+            created_datetime, modified_datetime, created_by, modified_by,
+            is_active, device_id
+        ])
+
+    columns = [
+        "EventID", "Timestamp", "EventType", "Source", "Severity", "Status",
+        "Description", "Location", "AcknowledgedBy", "AcknowledgedTimestamp",
+        "ResolutionDetails", "ResolutionTimestamp", "AdditionalDetails",
+        "CreatedDateTime", "ModifiedDateTime", "CreatedBy", "ModifiedBy",
+        "IsActive", "DeviceID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for NotificationDetails
+def create_notification_details(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        notification_id = _  # Assuming NotificationID is sequential
+        timestamp = fake.date_time_this_decade()
+        message = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        severity = random.choice(['Info', 'Warning', 'Critical'])[:50]  # Max 50 chars
+        source = fake.word()[:50]  # Max 50 chars
+        status = random.choice(['Sent', 'Failed', 'Acknowledged'])[:15]  # Max 15 chars
+        category = random.choice(['System', 'User', 'Alert'])[:25]  # Max 25 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        location = fake.city()[:50]  # Max 50 chars
+        acknowledged_by = fake.name()[:50]  # Max 50 chars
+        acknowledged_timestamp = fake.date_time_this_decade()
+        resolution_details = fake.text(max_nb_chars=200)[:100]  # Max 100 chars
+        resolution_timestamp = fake.date_time_this_decade()
+        correlation_id = random.randint(1, 1000)  # Random correlation ID
+        notification_type = random.choice(['Email', 'SMS', 'Push'])[:100]  # Max 100 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)
+
+        # Append the synthetic entry to the data list
+        data.append([
+            notification_id, timestamp, message, severity, source, status,
+            category, additional_details, location, acknowledged_by,
+            acknowledged_timestamp, resolution_details, resolution_timestamp,
+            correlation_id, notification_type, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    columns = [
+        "NotificationID", "Timestamp", "Message", "Severity", "Source", "Status",
+        "Category", "AdditionalDetails", "Location", "AcknowledgedBy",
+        "AcknowledgedTimestamp", "ResolutionDetails", "ResolutionTimestamp",
+        "CorrelationID", "NotificationType", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for UserRoleDetails
+def create_user_role_details(num_entries):
+    data = []
+    for _ in range(num_entries):
+        role_id = _  # Assuming RoleID is sequential
+        role_name = random.choice(['Admin', 'User', 'Viewer'])[:50]  # Max 50 chars
+        description = fake.text(max_nb_chars=200)[:100]  # Max 100 chars
+        permission = fake.text(max_nb_chars=200)[:100]  # Max 100 chars
+        created_by = fake.name()[:50]  # Max 50 chars
+        created_timestamp = datetime.now()
+        modified_by = fake.name()[:50]  # Max 50 chars
+        modified_timestamp = created_timestamp
+        status = random.choice(['Active', 'Inactive'])[:15]  # Max 15 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        is_active = random.choice([True, False])
+
+        # Append the synthetic entry to the data list
+        data.append([
+            role_id, role_name, description, permission,
+            created_by, created_timestamp, modified_by, modified_timestamp,
+            status, additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active
+        ])
+
+    columns = [
+        "RoleID", "RoleName", "Description", "Permission",
+        "CreatedBy", "CreatedTimestamp", "ModifiedBy", "ModifiedTimestamp",
+        "Status", "AdditionalDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for UserDetails
+def create_user_details(num_entries, num_roles):
+    data = []
+    for _ in range(num_entries):
+        user_id = _  # Assuming UserID is sequential
+        user_name = fake.user_name()[:25]  # Max 25 chars
+        full_name = fake.name()[:50]  # Max 50 chars
+        email = fake.email()[:100]  # Max 100 chars
+        status = random.choice(['Active', 'Inactive'])[:15]  # Max 15 chars
+        creation_date = datetime.now()
+        phone_number = fake.phone_number()[:10]  # Max 10 chars
+        address = fake.address()[:150]  # Max 150 chars
+        preferences = fake.word()[:50]  # Max 50 chars
+        country_code = fake.country_code()[:15]  # Max 15 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        role_id = random.randint(1, num_roles)  # Random RoleID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            user_id, user_name, full_name, email, status,
+            creation_date, phone_number, address, preferences,
+            country_code, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, role_id
+        ])
+
+    columns = [
+        "UserID", "UserName", "FullName", "Email", "Status",
+        "CreationDate", "PhoneNumber", "Address", "Preferences",
+        "CountryCode", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "RoleID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for DevicesOnboarding
+def create_devices_onboarding(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        device_management_id = _  # Assuming DeviceManagementID is sequential
+        device_count = random.randint(1, 100)  # Random device count
+        device_group = fake.word()[:50]  # Max 50 chars
+        device_status = random.choice(['Active', 'Inactive', 'Decommissioned'])[:15]  # Max 15 chars
+        installation_date = fake.date_time_this_decade()
+        decommissioning_date = installation_date + timedelta(days=random.randint(30, 365))  # Random decommissioning date
+        location = fake.city()[:50]  # Max 50 chars
+        operational_state = random.choice(['Operational', 'Non-Operational'])[:25]  # Max 25 chars
+        encryption_status = random.choice(['Enabled', 'Disabled'])[:15]  # Max 15 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            device_management_id, device_count, device_group, device_status,
+            installation_date, decommissioning_date, location, operational_state,
+            encryption_status, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    columns = [
+        "DeviceManagementID", "DeviceCount", "DeviceGroup", "DeviceStatus",
+        "InstallationDate", "DecommissioningDate", "Location", "OperationalState",
+        "EncryptionStatus", "CreatedDateTime", "ModifiedDateTime", "CreatedBy",
+        "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for ServiceProvider
+def create_service_provider(num_entries):
+    data = []
+    for _ in range(num_entries):
+        service_provider_id = _  # Assuming ServiceProviderID is sequential
+        service_provider_name = fake.company()[:50]  # Max 50 chars
+        custom_tag = fake.word()[:25]  # Max 25 chars
+        service_level_agreement = fake.text(max_nb_chars=200)[:100]  # Max 100 chars
+        compliance_certificate = random.choice(['Yes', 'No'])[:15]  # Max 15 chars
+        security_feature = random.choice(['Basic', 'Advanced'])[:20]  # Max 20 chars
+        billing_model = random.choice(['Monthly', 'Yearly'])[:25]  # Max 25 chars
+        location = fake.city()[:50]  # Max 50 chars
+        contact_person = fake.name()[:25]  # Max 25 chars
+        phone_number = fake.phone_number()[:10]  # Max 10 chars
+        email_address = fake.email()[:25]  # Max 25 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+
+        # Append the synthetic entry to the data list
+        data.append([
+            service_provider_id, service_provider_name, custom_tag,
+            service_level_agreement, compliance_certificate, security_feature,
+            billing_model, location, contact_person, phone_number,
+            email_address, created_datetime, modified_datetime,
+            created_by, modified_by, is_active
+        ])
+
+    columns = [
+        "ServiceProviderID", "ServiceProviderName", "CustomTag", "ServiceLevelAgreement",
+        "ComplianceCertificate", "SecurityFeature", "BillingModel", "Location",
+        "ContactPerson", "PhoneNumber", "EmailAddress", "CreatedDateTime",
+        "ModifiedDateTime", "CreatedBy", "ModifiedBy", "IsActive"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for Features
+def create_features(num_entries, num_service_providers):
+    data = []
+    for _ in range(num_entries):
+        features_id = _  # Assuming FeaturesID is sequential
+        device_management = fake.word()[:50]  # Max 50 chars
+        data_analytics = fake.word()[:50]  # Max 50 chars
+        cloud_service = fake.word()[:50]  # Max 50 chars
+        application = fake.word()[:50]  # Max 50 chars
+        other_integration = fake.word()[:50]  # Max 50 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        service_provider_id = random.randint(1, num_service_providers)  # Random ServiceProviderID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            features_id, device_management, data_analytics, cloud_service,
+            application, other_integration, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, service_provider_id
+        ])
+
+    columns = [
+        "FeaturesID", "DeviceManagement", "DataAnalytics", "CloudService",
+        "Application", "OtherIntegration", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "ServiceProviderID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for UsageDetails
+def create_usage_details(num_entries, num_features):
+    data = []
+    for _ in range(num_entries):
+        usage_id = _  # Assuming UsageID is sequential
+        usage_date = fake.date_time_this_decade()
+        usage_type = random.choice(['API', 'Web', 'Mobile'])[:15]  # Max 15 chars
+        usage_amount = f"{random.randint(1, 1000)} units"  # Random usage amount
+        unit_of_measure = random.choice(['GB', 'MB', 'Requests'])[:50]  # Max 50 chars
+        service_name = fake.word()[:25]  # Max 25 chars
+        cost = f"${random.uniform(1, 100)}"  # Random cost
+        currency = random.choice(['USD', 'EUR', 'GBP'])[:50]  # Max 50 chars
+        region = fake.country()[:25]  # Max 25 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        features_id = random.randint(1, num_features)  # Random FeaturesID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            usage_id, usage_date, usage_type, usage_amount,
+            unit_of_measure, service_name, cost, currency,
+            region, additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, features_id
+        ])
+
+    columns = [
+        "UsageID", "UsageDate", "UsageType", "UsageAmount",
+        "UnitOfMeasure", "ServiceName", "Cost", "Currency",
+        "Region", "AdditionalDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "FeaturesID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for ActivityDetails
+def create_activity_details(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        activity_id = _  # Assuming ActivityID is sequential
+        start_timestamp = fake.date_time_this_decade()
+        end_timestamp = start_timestamp + timedelta(hours=random.randint(1, 5))  # Random end time
+        activity_type = random.choice(['Login', 'Data Processing', 'Error Handling'])[:50]  # Max 50 chars
+        source = fake.word()[:50]  # Max 50 chars
+        status = random.choice(['Completed', 'Failed', 'In Progress'])[:15]  # Max 15 chars
+        duration = f"{(end_timestamp - start_timestamp).seconds // 60} minutes"  # Random duration
+        location = fake.city()[:15]  # Max 15 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        error_details = fake.word()[:50]  # Max 50 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            activity_id, start_timestamp, end_timestamp, activity_type,
+            source, status, duration, location, additional_details,
+            error_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    columns = [
+        "ActivityID", "StartTimestamp", "EndTimestamp", "ActivityType",
+        "Source", "Status", "Duration", "Location", "AdditionalDetails",
+        "ErrorDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for BillingDetails
+def create_billing_details(num_entries, num_usage):
+    data = []
+    for _ in range(num_entries):
+        billing_id = _  # Assuming BillingID is sequential
+        billing_date = fake.date_time_this_decade()
+        amount = f"${random.uniform(10, 500)}"  # Random amount
+        currency = random.choice(['USD', 'EUR', 'GBP'])[:25]  # Max 25 chars
+        billing_period_start = billing_date - timedelta(days=random.randint(1, 30))
+        billing_period_end = billing_date
+        payment_status = random.choice(['Paid', 'Pending', 'Failed'])[:15]  # Max 15 chars
+        payment_method = random.choice(['Credit Card', 'PayPal', 'Bank Transfer'])[:50]  # Max 50 chars
+        invoice_number = fake.uuid4()[:50]  # Max 50 chars
+        discounts = f"{random.uniform(0, 100):.2f}%"  # Random discount
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        usage_id = random.randint(1, num_usage)  # Random UsageID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            billing_id, billing_date, amount, currency,
+            billing_period_start, billing_period_end, payment_status,
+            payment_method, invoice_number, discounts, additional_details,
+            created_datetime, modified_datetime, created_by, modified_by,
+            is_active, usage_id
+        ])
+
+    columns = [
+        "BillingID", "BillingDate", "Amount", "Currency",
+        "BillingPeriodStart", "BillingPeriodEnd", "PaymentStatus",
+        "PaymentMethod", "InvoiceNumber", "Discounts", "AdditionalDetails",
+        "CreatedDateTime", "ModifiedDateTime", "CreatedBy", "ModifiedBy",
+        "IsActive", "UsageID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for CostDetails
+def create_cost_details(num_entries, num_devices, num_billing):
+    data = []
+    for _ in range(num_entries):
+        cost_detail_id = _  # Assuming CostDetailID is sequential
+        resource_name = fake.word()[:50]  # Max 50 chars
+        resource_type = random.choice(['Compute', 'Storage', 'Network'])[:25]  # Max 25 chars
+        usage_quantity = f"{random.randint(1, 100)} units"  # Random usage quantity
+        cost_amount = f"${random.uniform(1, 500)}"  # Random cost amount
+        service_name = fake.word()[:50]  # Max 50 chars
+        cost_category = random.choice(['Fixed', 'Variable'])[:25]  # Max 25 chars
+        cost_optimization_flag = random.choice([True, False])
+        total_cost = f"${random.uniform(10, 1000)}"  # Random total cost
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+        billing_id = random.randint(1, num_billing)  # Random BillingID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            cost_detail_id, resource_name, resource_type, usage_quantity,
+            cost_amount, service_name, cost_category, cost_optimization_flag,
+            total_cost, additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id, billing_id
+        ])
+
+    columns = [
+        "CostDetailID", "ResourceName", "ResourceType", "UsageQuantity",
+        "CostAmount", "ServiceName", "CostCategory", "CostOptimizationFlag",
+        "TotalCost", "AdditionalDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "DeviceID", "BillingID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Generate synthetic data
+num_entries = 1000  # Specify the number of entries you want for each table
+num_devices = 10  # Specify how many devices exist in DeviceDetails
+num_technicians = 5  # Specify how many technicians exist
+num_usage = 1000  # Specify how many usage records exist
+num_service_providers = 10  # Specify how many service providers exist
+num_roles = 10  # Specify how many user roles exist
+
+# Create data for each table
+event_details_data = create_event_details(num_entries, num_devices)
+notification_details_data = create_notification_details(num_entries, num_devices)
+user_role_details_data = create_user_role_details(num_roles)
+user_details_data = create_user_details(num_entries, num_roles)
+devices_onboarding_data = create_devices_onboarding(num_entries, num_devices)
+service_provider_data = create_service_provider(num_service_providers)
+features_data = create_features(num_entries, num_service_providers)
+usage_details_data = create_usage_details(num_entries, num_service_providers)
+activity_details_data = create_activity_details(num_entries, num_devices)
+billing_details_data = create_billing_details(num_entries, num_usage)
+cost_details_data = create_cost_details(num_entries, num_devices, num_entries)
+
+# Specify the directory where you want to save the files
+directory = r"C:\path\to\your\directory"  # Change this to your desired path
+
+# Save to CSV
+event_details_filename = os.path.join(directory, f'event_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+notification_details_filename = os.path.join(directory, f'notification_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+user_role_details_filename = os.path.join(directory, f'user_role_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+user_details_filename = os.path.join(directory, f'user_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+devices_onboarding_filename = os.path.join(directory, f'devices_onboarding_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+service_provider_filename = os.path.join(directory, f'service_provider_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+features_filename = os.path.join(directory, f'features_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+usage_details_filename = os.path.join(directory, f'usage_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+activity_details_filename = os.path.join(directory, f'activity_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+billing_details_filename = os.path.join(directory, f'billing_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+cost_details_filename = os.path.join(directory, f'cost_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+
+# Save all dataframes to CSV
+event_details_data.to_csv(event_details_filename, index=False)
+notification_details_data.to_csv(notification_details_filename, index=False)
+user_role_details_data.to_csv(user_role_details_filename, index=False)
+user_details_data.to_csv(user_details_filename, index=False)
+devices_onboarding_data.to_csv(devices_onboarding_filename, index=False)
+service_provider_data.to_csv(service_provider_filename, index=False)
+features_data.to_csv(features_filename, index=False)
+usage_details_data.to_csv(usage_details_filename, index=False)
+activity_details_data.to_csv(activity_details_filename, index=False)
+billing_details_data.to_csv(billing_details_filename, index=False)
+cost_details_data.to_csv(cost_details_filename, index=False)
+
+# Print confirmation
+print(f"Generated {num_entries} records for each table.")
+print(f"Data saved to {event_details_filename}")
+print(f"Data saved to {notification_details_filename}")
+print(f"Data saved to {user_role_details_filename}")
+print(f"Data saved to {user_details_filename}")
+print(f"Data saved to {devices_onboarding_filename}")
+print(f"Data saved to {service_provider_filename}")
+print(f"Data saved to {features_filename}")
+print(f"Data saved to {usage_details_filename}")
+print(f"Data saved to {activity_details_filename}")
+print(f"Data saved to {billing_details_filename}")
+print(f"Data saved to {cost_details_filename}")
