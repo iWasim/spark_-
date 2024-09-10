@@ -1,0 +1,233 @@
+import pandas as pd
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+import os
+
+# Initialize Faker
+fake = Faker()
+
+# Function to create synthetic data for SensorDetails
+def create_sensor_details(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        sensor_id = _  # Assuming SensorID is sequential
+        sensor_name = (fake.word().capitalize() + " Sensor")[:24]  # Random sensor name, max 24 chars
+        sensor_type = random.choice(['Temperature', 'Pressure', 'Humidity', 'Proximity', 'Light'])[:24]  # Random sensor type
+        manufacturer = fake.company()[:24]  # Random manufacturer, max 24 chars
+        model_number = fake.word()[:24]  # Random model number, max 24 chars
+        serial_number = fake.uuid4()  # Random serial number (UUID)
+        
+        installation_date = fake.date_time_this_decade()  # Random installation date
+        calibration_date = installation_date + timedelta(days=random.randint(30, 365))  # Random calibration date
+        status = random.choice(['Active', 'Inactive', 'Under Maintenance'])[:14]  # Random status, max 14 chars
+        location = fake.city()[:24]  # Random location, max 24 chars
+        measurement_range = f"{random.randint(0, 100)}-{random.randint(101, 200)}"  # Random measurement range
+        accuracy = f"{random.uniform(0.1, 5.0):.2f}%"  # Random accuracy percentage
+        resolution = f"{random.randint(1, 10)} units"  # Random resolution
+        data_frequency = random.choice(['1s', '5s', '10s', '30s', '1m'])  # Random data frequency
+        power_source = random.choice(['Battery', 'AC', 'Solar'])[:24]  # Random power source, max 24 chars
+        communication_protocol = random.choice(['WiFi', 'Bluetooth', 'Zigbee', 'LoRa'])[:24]  # Random communication protocol, max 24 chars
+        cost = round(random.uniform(10, 1000), 2)  # Random cost
+        supplier = fake.company()[:24]  # Random supplier, max 24 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Random additional details, max 999 chars
+        created_datetime = datetime.now()  # Current datetime for created
+        modified_datetime = created_datetime  # Same for modified
+        created_by = fake.name()[:24]  # Random creator name, max 24 chars
+        modified_by = fake.name()[:24]  # Random modifier name, max 24 chars
+        is_active = random.choice([True, False])  # Random active status
+        
+        # Randomly select a DeviceID from the previously generated devices
+        device_id = random.randint(1, num_devices)
+
+        # Append the synthetic entry to the data list
+        data.append([
+            sensor_id, sensor_name, sensor_type, manufacturer, model_number,
+            serial_number, installation_date, calibration_date,
+            status, location, measurement_range, accuracy,
+            resolution, data_frequency, power_source,
+            communication_protocol, cost, supplier,
+            additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    # Create a DataFrame
+    columns = [
+        "SensorID", "SensorName", "SensorType", "Manufacturer", "ModelNumber",
+        "SerialNumber", "InstallationDate", "CalibrationDate",
+        "Status", "Location", "MeasurementRange", "Accuracy",
+        "Resolution", "DataFrequency", "PowerSource",
+        "CommunicationProtocol", "Cost", "Supplier", "AdditionalDetails",
+        "CreatedDateTime", "ModifiedDateTime", "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    df = pd.DataFrame(data, columns=columns)
+    return df
+
+# Function to create synthetic data for MaintenanceDetails
+def create_maintenance_details(num_entries, num_devices, num_technicians):
+    data = []
+    for _ in range(num_entries):
+        maintenance_id = _  # Assuming MaintenanceID is sequential
+        start_time = fake.date_time_this_decade()  # Random start time
+        maintenance_type = random.choice(['Routine', 'Repair', 'Inspection'])[:24]  # Random maintenance type
+        technician_id = random.randint(1, num_technicians)  # Random technician ID
+        status = random.choice(['Completed', 'Pending', 'In Progress'])[:14]  # Random status, max 14 chars
+        duration = f"{random.randint(1, 8)} hours"  # Random duration
+        cost = round(random.uniform(100, 1000), 2)  # Random cost
+        location = fake.city()[:24]  # Random location, max 24 chars
+        description = fake.text(max_nb_chars=500)[:999]  # Random description, max 999 chars
+        parts_used = fake.word()[:24]  # Random parts used, max 24 chars
+        next_scheduled_maintenance = start_time + timedelta(days=random.randint(30, 180))  # Random next scheduled maintenance
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Random additional details, max 999 chars
+        parts_replaced = fake.word()[:24]  # Random parts replaced, max 24 chars
+        parts_repaired = fake.word()[:24]  # Random parts repaired, max 24 chars
+        maintenance_outcome = random.choice(['Successful', 'Failed'])[:14]  # Random outcome, max 14 chars
+        error_codes = fake.word()[:24]  # Random error codes, max 24 chars
+        priority_level = random.choice(['Low', 'Medium', 'High'])[:14]  # Random priority level, max 14 chars
+        created_datetime = datetime.now()  # Current datetime for created
+        modified_datetime = created_datetime  # Same for modified
+        created_by = fake.name()[:24]  # Random creator name, max 24 chars
+        modified_by = fake.name()[:24]  # Random modifier name, max 24 chars
+        is_active = random.choice([True, False])  # Random active status
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            maintenance_id, start_time, maintenance_type, technician_id,
+            status, duration, cost, location, description, parts_used,
+            next_scheduled_maintenance, additional_details, parts_replaced,
+            parts_repaired, maintenance_outcome, error_codes, priority_level,
+            created_datetime, modified_datetime, created_by, modified_by,
+            is_active, device_id
+        ])
+
+    # Create a DataFrame
+    columns = [
+        "MaintenanceID", "StartTimeStamp", "MaintenanceType", "TechnicianID",
+        "Status", "Duration", "Cost", "Location", "Description", "PartsUsed",
+        "NextScheduledMaintenance", "AdditionalDetails", "PartsReplaced",
+        "PartsRepaired", "MaintenanceOutCome", "ErrorCodes", "PriorityLevel",
+        "CreatedDateTime", "ModifiedDateTime", "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    df = pd.DataFrame(data, columns=columns)
+    return df
+
+# Function to create synthetic data for MaintenanceScheduleDetails
+def create_maintenance_schedule_details(num_entries, num_devices, num_technicians):
+    data = []
+    for _ in range(num_entries):
+        schedule_id = _  # Assuming ScheduleID is sequential
+        scheduled_date = fake.date_time_this_decade()  # Random scheduled date
+        maintenance_type = random.choice(['Routine', 'Repair', 'Inspection'])[:24]  # Random maintenance type
+        technician_id = random.randint(1, num_technicians)  # Random technician ID
+        status = random.choice(['Scheduled', 'Completed', 'Cancelled'])[:14]  # Random status, max 14 chars
+        duration = f"{random.randint(1, 8)} hours"  # Random duration
+        priority = random.choice(['Low', 'Medium', 'High'])[:14]  # Random priority, max 14 chars
+        location = fake.city()[:24]  # Random location, max 24 chars
+        description = fake.text(max_nb_chars=500)[:999]  # Random description, max 999 chars
+        parts_required = fake.word()[:24]  # Random parts required, max 24 chars
+        comments = fake.text(max_nb_chars=500)[:999]  # Random comments, max 999 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Random additional details, max 999 chars
+        created_by = fake.name()[:24]  # Random creator name, max 24 chars
+        created_timestamp = datetime.now()  # Current datetime for created
+        modified_by = fake.name()[:24]  # Random modifier name, max 24 chars
+        modified_timestamp = created_timestamp  # Same for modified
+        is_active = random.choice([True, False])  # Random active status
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            schedule_id, scheduled_date, maintenance_type, technician_id,
+            status, duration, priority, location, description, parts_required,
+            comments, additional_details, created_by, created_timestamp,
+            modified_by, modified_timestamp, is_active, device_id
+        ])
+
+    # Create a DataFrame
+    columns = [
+        "ScheduleID", "ScheduledDate", "MaintenanceType", "TechnicianID",
+        "Status", "Duration", "Priority", "Location", "Description", "PartsRequired",
+        "Comments", "AdditionalDetails", "CreatedBy", "CreatedTimeStamp",
+        "ModifiedBy", "ModifiedTimestamp", "IsActive", "DeviceID"
+    ]
+    
+    df = pd.DataFrame(data, columns=columns)
+    return df
+
+# Function to create synthetic data for DeviceOperationDetails
+def create_device_operation_details(num_entries, num_devices):
+    data = []
+    for _ in range(num_entries):
+        operation_id = _  # Assuming OperationID is sequential
+        timestamp = fake.date_time_this_decade()  # Random timestamp
+        health = random.choice(['Good', 'Fair', 'Poor'])[:24]  # Random health status, max 24 chars
+        battery_level = f"{random.randint(0, 100)}%"  # Random battery level
+        signal_strength = f"{random.randint(-100, 0)} dBm"  # Random signal strength
+        last_communication = fake.date_time_this_decade()  # Random last communication time
+        firmware_version = f"v{random.randint(1, 5)}.{random.randint(0, 9)}.{random.randint(0, 9)}"  # Random firmware version
+        location = fake.city()[:24]  # Random location, max 24 chars
+        temperature = f"{random.uniform(-20, 50):.2f}°C"  # Random temperature
+        error_codes = fake.word()[:24]  # Random error codes, max 24 chars
+        uptime = f"{random.randint(1, 100)} hours"  # Random uptime
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Random additional details, max 999 chars
+        created_datetime = datetime.now()  # Current datetime for created
+        modified_datetime = created_datetime  # Same for modified
+        created_by = fake.name()[:24]  # Random creator name, max 24 chars
+        modified_by = fake.name()[:24]  # Random modifier name, max 24 chars
+        is_active = random.choice([True, False])  # Random active status
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+
+        # Append the synthetic entry to the data list
+        data.append([
+            operation_id, timestamp, health, battery_level,
+            signal_strength, last_communication, firmware_version,
+            location, temperature, error_codes, uptime,
+            additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    # Create a DataFrame
+    columns = [
+        "OperationID", "Timestamp", "Health", "BatteryLevel",
+        "SignalStrength", "LastCommunication", "FirmwareVersion",
+        "Location", "Temperature", "ErrorCodes", "Uptime",
+        "AdditionalDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    df = pd.DataFrame(data, columns=columns)
+    return df
+
+# Generate synthetic data
+num_entries = 1000  # Specify the number of entries you want for each table
+num_devices = 10  # Specify how many devices exist in DeviceDetails
+num_technicians = 5  # Specify how many technicians exist
+
+# Create data for each table
+sensor_details_data = create_sensor_details(num_entries, num_devices)
+maintenance_details_data = create_maintenance_details(num_entries, num_devices, num_technicians)
+maintenance_schedule_details_data = create_maintenance_schedule_details(num_entries, num_devices, num_technicians)
+device_operation_details_data = create_device_operation_details(num_entries, num_devices)
+
+# Specify the directory where you want to save the files
+directory = r"C:\path\to\your\directory"  # Change this to your desired path
+
+# Save to CSV
+sensor_details_filename = os.path.join(directory, f'sensor_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+maintenance_details_filename = os.path.join(directory, f'maintenance_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+maintenance_schedule_details_filename = os.path.join(directory, f'maintenance_schedule_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+device_operation_details_filename = os.path.join(directory, f'device_operation_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+
+sensor_details_data.to_csv(sensor_details_filename, index=False)
+maintenance_details_data.to_csv(maintenance_details_filename, index=False)
+maintenance_schedule_details_data.to_csv(maintenance_schedule_details_filename, index=False)
+device_operation_details_data.to_csv(device_operation_details_filename, index=False)
+
+# Print confirmation
+print(f"Generated {num_entries} records for each table.")
+print(f"Data saved to {sensor_details_filename}")
+print(f"Data saved to {maintenance_details_filename}")
+print(f"Data saved to {maintenance_schedule_details_filename}")
+print(f"Data saved to {device_operation_details_filename}")
