@@ -1,0 +1,89 @@
+sensors
+
+import pandas as pd
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+import os
+
+# Initialize Faker
+fake = Faker()
+
+# Function to create synthetic data for SensorDetails
+def create_synthetic_data(num_entries, num_devices):
+    data = []
+
+    # Generate synthetic DeviceDetails entries first (for foreign key reference)
+    device_ids = list(range(num_devices))  # Assuming DeviceID starts from 0 to num_devices-1
+
+    for _ in range(num_entries):
+        sensor_id = _  # Assuming SensorID is sequential
+        sensor_name = fake.word().capitalize() + " Sensor"  # Random sensor name
+        sensor_type = random.choice(['Temperature', 'Pressure', 'Humidity', 'Proximity', 'Light'])  # Random sensor type
+        manufacturer = fake.company()  # Random manufacturer
+        model_number = fake.word()  # Random model number
+        serial_number = fake.uuid4()  # Random serial number (UUID)
+        
+        installation_date = fake.date_time_this_decade()  # Random installation date
+        calibration_date = installation_date + timedelta(days=random.randint(30, 365))  # Random calibration date
+        status = random.choice(['Active', 'Inactive', 'Under Maintenance'])  # Random status
+        location = fake.city()  # Random location
+        measurement_range = f"{random.randint(0, 100)}-{random.randint(101, 200)}"  # Random measurement range
+        accuracy = f"{random.uniform(0.1, 5.0):.2f}%"  # Random accuracy percentage
+        resolution = f"{random.randint(1, 10)} units"  # Random resolution
+        data_frequency = random.choice(['1s', '5s', '10s', '30s', '1m'])  # Random data frequency
+        power_source = random.choice(['Battery', 'AC', 'Solar'])  # Random power source
+        communication_protocol = random.choice(['WiFi', 'Bluetooth', 'Zigbee', 'LoRa'])  # Random communication protocol
+        cost = round(random.uniform(10, 1000), 2)  # Random cost
+        supplier = fake.company()  # Random supplier
+        additional_details = fake.text(max_nb_chars=500)  # Random additional details
+        created_datetime = datetime.now()  # Current datetime for created
+        modified_datetime = created_datetime  # Same for modified
+        created_by = fake.name()  # Random creator name
+        modified_by = fake.name()  # Random modifier name
+        is_active = random.choice([True, False])  # Random active status
+        
+        # Randomly select a DeviceID from the previously generated devices
+        device_id = random.choice(device_ids)
+
+        # Append the synthetic entry to the data list
+        data.append([
+            sensor_id, sensor_name, sensor_type, manufacturer, model_number,
+            serial_number, installation_date, calibration_date,
+            status, location, measurement_range, accuracy,
+            resolution, data_frequency, power_source,
+            communication_protocol, cost, supplier,
+            additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id
+        ])
+
+    # Create a DataFrame
+    columns = [
+        "SensorID", "SensorName", "SensorType", "Manufacturer", "ModelNumber",
+        "SerialNumber", "InstallationDate", "CalibrationDate",
+        "Status", "Location", "MeasurementRange", "Accuracy",
+        "Resolution", "DataFrequency", "PowerSource",
+        "CommunicationProtocol", "Cost", "Supplier", "AdditionalDetails",
+        "CreatedDateTime", "ModifiedDateTime", "CreatedBy", "ModifiedBy", "IsActive", "DeviceID"
+    ]
+    
+    df = pd.DataFrame(data, columns=columns)
+    return df
+
+# Generate synthetic data
+num_entries = 1000  # Specify the number of entries you want for SensorDetails
+num_devices = 10  # Specify how many devices exist in DeviceDetails
+synthetic_data = create_synthetic_data(num_entries, num_devices)
+
+# Generate a unique filename using the current timestamp
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+# Specify the directory where you want to save the file
+directory = r"C:\path\to\your\directory"  # Change this to your desired path
+filename = os.path.join(directory, f'sensor_details_{timestamp}.csv')
+
+# Save to CSV
+synthetic_data.to_csv(filename, index=False)
+
+# Print the generated DataFrame and filename
+print(f"Generated {num_entries} records.")
+print(f"Data saved to {filename}")
