@@ -231,3 +231,578 @@ print(f"Data saved to {sensor_details_filename}")
 print(f"Data saved to {maintenance_details_filename}")
 print(f"Data saved to {maintenance_schedule_details_filename}")
 print(f"Data saved to {device_operation_details_filename}")
+
+===============================================================================================
+
+MaintenanceID
+
+StartTimestamp
+
+MaintenanceType
+
+DeviceId
+
+TechnicianID
+
+Status
+
+Duration
+
+Cost
+
+Location
+
+Description
+
+PartsUsed
+
+NextScheduledMaintenance
+
+AdditionalDetails
+
+PartsReplaced
+
+PartsRepaired
+
+MaintenanceOutcome
+
+ErrorCodes
+
+PriorityLevel
+
+devicedetails-
+ 
+
+DeviceID INT NOT NULL PRIMARY KEY,
+
+ DeviceName NVARCHAR(50),
+
+ Latitude DECIMAL(9,6),
+
+ Longitude DECIMAL(9,6),
+
+ DeviceType NVARCHAR(50),
+
+ MeasuringValue FLOAT,
+
+ MeasuringUnit NVARCHAR(10),
+
+ Status NVARCHAR(20),
+
+ Manufacturer NVARCHAR(30),
+
+ Model NVARCHAR(25),
+
+ FrimwareVersion NVARCHAR(25),
+
+ InstallationDate DATETIME,
+
+ Last_maintenance_date DATETIME,
+
+ AdditionalDetails NVARCHAR(100),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+devicedetails-
+
+PartID INT NOT NULL PRIMARY KEY,
+
+ PartName NVARCHAR(25),
+
+ PartType NVARCHAR(25),
+
+ Manufacturer NVARCHAR(30),
+
+ ModelNumber NVARCHAR(25),
+
+ SerialNumber NVARCHAR(25),
+
+ InstallationDate DATETIME,
+
+ WarrantyExpiryDate DATETIME,
+
+ Status NVARCHAR(15),
+
+ Location NVARCHAR(50),
+
+ MaintainenaceHistory NVARCHAR(MAX),
+
+ Cost DECIMAL(10,2),
+
+ Supplier NVARCHAR(30),
+
+ AdditionalDetails NVARCHAR(1000),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+sensordetails
+
+SensorID INT NOT NULL PRIMARY KEY,
+
+ SensorName NVARCHAR(100),
+
+ SensorType NVARCHAR(25),
+
+ Manufacturer NVARCHAR(30),
+
+ ModelNumber NVARCHAR(25),
+
+ SerialNumber NVARCHAR(25),
+
+ InstallationDate DATETIME,
+
+ CalibrationDate DATETIME,
+
+ Status NVARCHAR(15),
+
+ Location NVARCHAR(50),
+
+ MeasurementRange NVARCHAR(15),
+
+ Acccuracy NVARCHAR(25),
+
+ Resolution NVARCHAR(25),
+
+ DataFrequency NVARCHAR(25),
+
+ PowerSource NVARCHAR(25)
+
+ CommunicationProtocol NVARCHAR(50),
+
+ Cost DECIMAL(10,2),
+
+ Supplier NVARCHAR(30),
+
+ AdditionalDetails NVARCHAR(1000),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+sensordetails-
+
+SensorID INT NOT NULL PRIMARY KEY,
+
+ SensorName NVARCHAR(100),
+
+ SensorType NVARCHAR(25),
+
+ Manufacturer NVARCHAR(30),
+
+ ModelNumber NVARCHAR(25),
+
+ SerialNumber NVARCHAR(25),
+
+ InstallationDate DATETIME,
+
+ CalibrationDate DATETIME,
+
+ Status NVARCHAR(15),
+
+ Location NVARCHAR(50),
+
+ MeasurementRange NVARCHAR(15),
+
+ Acccuracy NVARCHAR(25),
+
+ Resolution NVARCHAR(25),
+
+ DataFrequency NVARCHAR(25),
+
+ PowerSource NVARCHAR(25)
+
+ CommunicationProtocol NVARCHAR(50),
+
+ Cost DECIMAL(10,2),
+
+ Supplier NVARCHAR(30),
+
+ AdditionalDetails NVARCHAR(1000),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+MaintenanceDetails(
+
+
+
+ MaintenanceID INT NOT NULL PRIMARY KEY,
+
+ StartTimeStamp DATETIME,
+
+ MaintenanceType NVARCHAR(25),
+
+ TechnicianID INT NOT NULL,
+
+ Status NVARCHAR(15),
+
+ Duration NVARCHAR(25),
+
+ Cost DECIMAL(10,2),
+
+ Location NVARCHAR(50),
+
+ Description NVARCHAR(1000),
+
+ PartsUsed NVARCHAR(50),
+
+ NextScheduledMaintenance DATETIME,
+
+ AdditionalDetails NVARCHAR(1000),
+
+ PartsReplaced NVARCHAR(50),
+
+ PartsRepaired NVARCHAR(50),
+
+ MaintenanceOutCome NVARCHAR(100),
+
+ ErrorCodes NVARCHAR(50),
+
+ PriorityLevel NVARCHAR(15),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+ 
+
+MaintenanceScheduleDetails(
+
+ ScheduleID INT NOT NULL PRIMARY KEY,
+
+ ScheduledDate DATETIME,
+
+ MaintenaceType NVARCHAR(25),
+
+ TechnicianID INT NOT NULL,
+
+ Status NVARCHAR(15),
+
+ Duration NVARCHAR(25),
+
+ Priority NVARCHAR(15),
+
+ Location NVARCHAR(50),
+
+ Description NVARCHAR(1000),
+
+ PartsRequired NVARCHAR(50),
+
+ Comments NVARCHAR(1000),
+
+ AdditionalDetails NVARCHAR(1000),
+
+ CreatedBy NVARCHAR(50),
+
+ CreatedTimeStamp DATETIME,
+
+ ModifiedBy NVARCHAR(50),
+
+ ModifiedTimestamp DATETIME,
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+ 
+
+DeviceOperationDetails(
+
+ OperationID INT NOT NULL PRIMARY KEY,
+
+ Timestamp DATETIME,
+
+ Health nvarchar(50),
+
+ BatteryLevel NVACHAR(25),
+
+ SignalStrength NVARCHAR(25),
+
+ LastCommunication NVARCHAR(50),
+
+ FirmwareVersion NVARCHAR(50),
+
+    Location NVARCHAR(50),
+
+ Temperature NVARCHAR(25),
+
+ ErrorCodes NVARCHAR(50),
+
+ Uptime NVARCHAR(25),
+
+ AdditionalDetails NVARCHAR(1000),
+
+ CreatedDateTime DATETIME,
+
+ ModifiedDateTime DATETIME,
+
+ CreatedBy NVARCHAR(50),
+
+ ModifiedBy NVARCHAR(50),
+
+ IsActive BIT,
+
+ DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+
+
+============rest-----------------------
+
+EventDetails(
+	EventID INT NOT NULL PRIMARY KEY,
+	Timestamp DATETIME,
+	EventType NVARCHAR(15),
+	Source NVARCHAR(20),
+	Severity NVARCHAR(25),
+	Status NVARCHAR(15),
+	Description NVARCHAR(1000),
+	Location NVARCHAR(50),
+	AcknowledgedBy NVARCHAR(50),
+	AcknowledgedTimestamp DATETIME,
+	ResolutionDetails NVARCHAR(100),
+	ResolutionTimestamp DATETIME,
+	AdditionalDetails NVARCHAR(1000),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+---------------------------------------------------------------------
+--NotificationDetails
+Create Table NotificationDetails(
+	NotificationID INT NOT NULL PRIMARY KEY,
+	Timestamp DATETIME,
+	Message NVARCHAR(1000),
+	Severity NVARCHAR(50),
+	Source NVARCHAR(50),
+	Status NVARCHAR(15),
+	Category NVARCHAR(25),
+	AdditionalDetails NVARCHAR(1000),
+	Location NVARCHAR(50),
+	AcknowledgedBy NVARCHAR(50),
+	AcknowledgedTimestamp DATETIME,
+	ResolutionDetails NVARCHAR(100),
+	ResoultionTimestamp DATETIME,
+	CorrelationID INT NOT NULL,
+	NotificationType NVARCHAR(100),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+-------------------------------------------------------------
+--UserRoleDetails
+CREATE TABLE UserRoleDetails(
+	RoleID INT NOT NULL PRIMARY KEY,
+	RoleName NVARCHAR(50),
+	Description NVARCHAR(100),
+	Permission NVARCHAR(100),
+	CreatedBy NVARCHAR(50),
+	CreatedTimestamp DATETIME,
+	ModifiedBy NVARCHAR(50),
+	ModifiedTimestamp DATETIME,
+	Status NVARCHAR(15),
+	AdditionalDetails NVARCHAR(1000),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT)
+------------------------------------------------
+--UserDetails
+CREATE TABLE UserDetails(
+	UserID INT NOT NULL PRIMARY KEY,
+	UserName NVARCHAR(25),
+	FullName NVARCHAR(50),
+	Email NVARCHAR(100),
+	Status NVARCHAR(15),
+	CreationDate DATETIME
+	PhoneNumber NVARCHAR(10)
+	Address NVARCHAR(150),
+	Preferences NVARCHAR(50),
+	CountryCode NVARCHAR(15)
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	RoleID INT FOREIGN KEY REFERENCES UserRoleDetails(RoleID))
+-------------------------------------------------
+--DevicesOn-boarding
+CREATE TABLE DeviceManagement(
+	DeviceManagementID INT NOT NULL PRIMARY KEY,
+	DeviceCount INT,
+	DeviceGroup NVARCHAR(50),
+	DeviceStatus NVARCHAR(15),
+	InstallationDate DATETIME,
+	DecomissiongDate DATETIME,
+	Location NVARCHAR(50),
+	OperationalState NVARCHAR(25),
+	EncryptionSatus NVARCHAR(15),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID))
+------------------------------------------------
+--ServiceProvider
+CREATE TABLE ServiceProvider(
+	ServiceProviderID INT NOT NULL PRIMARY KEY,
+	ServiceProviderName NVARCHAR(50),
+	CustomTag  NVARCHAR(25),
+	ServiceLevelAgreement NVARCHAR(100),
+	ComplaianceCertificate NVARCHAR(15),
+	SecurityFeature NVARCHAR(20),
+	BillingModel NVARCHAR(25),
+	Location NVARCHAR(50),
+	ContactPerson NVARCHAR(25),
+	PhoneNumber NVARCHAR(10),
+	emailAddress WebSite NVARCHAR(25),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceMangementID INT FOREIGN KEY REFERENCES DeviceMangement(DeviceMangementID))
+---------------------------------------------------
+--Features
+CREATE TABLE Features(
+	FeaturesID INT NOT NULL PRIMARY KEY,
+	DeviceManagement NVARCHAR(50),
+	DataAnalytics NVARCHAR(50),
+	CloudService NVARCHAR(50),
+	Application NVARCHAR(50),
+	OtherIntegration NVARCHAR(50),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	ServiceProviderID INT FOREIGN KEY REFERENCES ServiceProvider(ServiceProviderID))
+ 
+---------------------------------------------
+UsageDetails
+CREATE TABLE UsageDetails(
+	UsageID INT NOT NULL PRIMARY KEY,
+	UsageDate DATETIME,
+	UsageType NVARCHAR(15),
+	UsageAmount NVARCHAR(200),
+	UnitOfMeasure NVARCHAR(50),
+	ServiceName NVARCHAR(25),
+	Cost NVARCHAR(50),
+	Currency NVARCHAR(50),
+	Region NVARCHAR(25),
+	AdditionalDetails NVARCHAR(1000),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	FeaturesID INT FOREIGN KEY REFERENCES Features(FeaturesID))
+ 
+-------------------------------------------------
+--ActivityDetails
+CREATE TABLE ActivityDetails(
+	ActivityID INT NOT NULL PRIMARY KEY,
+	StartTimestamp DATETIME,
+	EndTimestamp DATETIME,
+	ActivityType NVARCHAR(50),
+	Source NVARCHAR(50),
+	Status NVARCHAR(15),
+	Duration NVARCHAR(25),
+	Location NVARCHAR(15),
+	AdditionalDetails NVARCHAR(1000),
+	ErrorDetails NVARCHAR(50),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID),
+)
+----------------------------------------------------------------------------
+--Billing
+CREATE TABLE BillingDetails(
+	BillingID INT NOT NULL PRIMARY KEY,
+	BillingDate DATETIME,
+	Amount NVARCHAR(100),
+	Currency NVARCHAR(25),
+	Billing_period_start DATETIME,
+	Billing_period_end DATETIME,
+	Payment_status NVARCHAR(15),
+	Payment_method NVARCHAR(50),
+	Invoice_number NVARCHAR(50),
+	Discounts NVARCHAR(50),
+	AdditionalDetails NVARCHAR(1000),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	UsageID INT FOREIGN KEY REFERENCES UsageDetails(UsageID))
+ 
+----------------------------------------------------------------
+--CostDetails
+CREATE TABLE CostDetails(
+	CostDetailID INT NOT NULL PRIMARY KEY,
+	ResourceName NVARCHAR(50),
+	ResourceType NVARCHAR(25),
+	UsageQuantity NVARCHAR(15),
+	CostAmount NVARCHAR(20),
+	ServiceName NVARCHAR(50),
+	CostCategory NVARCHAR(25),
+	CostOptimizationFlag BIT,
+	TotalCost NVARCHAR(100),
+	AdditionalDetails NVARCHAR(1000),
+	CreatedDateTime DATETIME,
+	ModifiedDateTime DATETIME,
+	CreatedBy NVARCHAR(50),
+	ModifiedBy NVARCHAR(50),
+	IsActive BIT,
+	DeviceID INT FOREIGN KEY REFERENCES DeviceDetails(DeviceID),
+	BillingID INT FOREIGN KEY REFERENCES BillingDetails(BillingID))
