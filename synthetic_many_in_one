@@ -1379,3 +1379,200 @@ print(f"Data saved to {usage_details_filename}")
 print(f"Data saved to {activity_details_filename}")
 print(f"Data saved to {billing_details_filename}")
 print(f"Data saved to {cost_details_filename}")
+
+
+>>>>>>>activitydetails new
+
+import pandas as pd
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+import os
+
+# Initialize Faker
+fake = Faker()
+
+# Function to create synthetic data for UserDetails
+def create_user_details(num_entries):
+    data = []
+    for _ in range(num_entries):
+        user_id = _  # Assuming UserID is sequential
+        user_name = fake.user_name()[:25]  # Max 25 chars
+        full_name = fake.name()[:50]  # Max 50 chars
+        email = fake.email()[:100]  # Max 100 chars
+        status = random.choice(['Active', 'Inactive'])[:15]  # Max 15 chars
+        creation_date = datetime.now()
+        phone_number = fake.phone_number()[:10]  # Max 10 chars
+        address = fake.address()[:150]  # Max 150 chars
+        preferences = fake.word()[:50]  # Max 50 chars
+        country_code = fake.country_code()[:15]  # Max 15 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+
+        # Append the synthetic entry to the data list
+        data.append([
+            user_id, user_name, full_name, email, status,
+            creation_date, phone_number, address, preferences,
+            country_code, created_datetime, modified_datetime,
+            created_by, modified_by, is_active
+        ])
+
+    columns = [
+        "UserID", "UserName", "FullName", "Email", "Status",
+        "CreationDate", "PhoneNumber", "Address", "Preferences",
+        "CountryCode", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for UsageDetails
+def create_usage_details(num_entries):
+    data = []
+    for _ in range(num_entries):
+        usage_id = _  # Assuming UsageID is sequential
+        usage_date = fake.date_time_this_decade()
+        usage_type = random.choice(['API', 'Web', 'Mobile'])[:15]  # Max 15 chars
+        usage_amount = f"{random.randint(1, 1000)} units"  # Random usage amount
+        unit_of_measure = random.choice(['GB', 'MB', 'Requests'])[:50]  # Max 50 chars
+        service_name = fake.word()[:25]  # Max 25 chars
+        cost = f"${random.uniform(1, 100)}"  # Random cost
+        currency = random.choice(['USD', 'EUR', 'GBP'])[:50]  # Max 50 chars
+        region = fake.country()[:25]  # Max 25 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+
+        # Append the synthetic entry to the data list
+        data.append([
+            usage_id, usage_date, usage_type, usage_amount,
+            unit_of_measure, service_name, cost, currency,
+            region, additional_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active
+        ])
+
+    columns = [
+        "UsageID", "UsageDate", "UsageType", "UsageAmount",
+        "UnitOfMeasure", "ServiceName", "Cost", "Currency",
+        "Region", "AdditionalDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Function to create synthetic data for ActivityDetails
+def create_activity_details(num_entries, num_devices, user_ids, usage_ids):
+    data = []
+    for _ in range(num_entries):
+        activity_id = _  # Assuming ActivityID is sequential
+        start_timestamp = fake.date_time_this_decade()
+        end_timestamp = start_timestamp + timedelta(hours=random.randint(1, 5))  # Random end time
+        activity_type = random.choice(['Login', 'Data Processing', 'Error Handling'])[:50]  # Max 50 chars
+        source = fake.word()[:50]  # Max 50 chars
+        status = random.choice(['Completed', 'Failed', 'In Progress'])[:15]  # Max 15 chars
+        duration = f"{(end_timestamp - start_timestamp).seconds // 60} minutes"  # Random duration
+        location = fake.city()[:15]  # Max 15 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        error_details = fake.word()[:50]  # Max 50 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        device_id = random.randint(1, num_devices)  # Random DeviceID
+        user_id = random.choice(user_ids)  # Random UserID from existing users
+        usage_id = random.choice(usage_ids)  # Random UsageID from existing usage records
+
+        # Append the synthetic entry to the data list
+        data.append([
+            activity_id, start_timestamp, end_timestamp, activity_type,
+            source, status, duration, location, additional_details,
+            error_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, device_id, user_id, usage_id
+        ])
+
+    columns = [
+        "ActivityID", "StartTimestamp", "EndTimestamp", "ActivityType",
+        "Source", "Status", "Duration", "Location", "AdditionalDetails",
+        "ErrorDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "DeviceID", "UserID", "UsageID"
+    ]
+    
+    return pd.DataFrame
+
+===>only for activitydetails
+import pandas as pd
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+
+# Initialize Faker
+fake = Faker()
+
+
+# Function to create synthetic data for ActivityDetails
+def create_activity_details(num_entries, user_ids, usage_ids):
+    data = []
+    for _ in range(num_entries):
+        activity_id = _  # Assuming ActivityID is sequential
+        start_timestamp = fake.date_time_this_decade()
+        end_timestamp = start_timestamp + timedelta(hours=random.randint(1, 5))  # Random end time
+        activity_type = random.choice(['Login', 'Data Processing', 'Error Handling'])[:50]  # Max 50 chars
+        source = fake.word()[:50]  # Max 50 chars
+        status = random.choice(['Completed', 'Failed', 'In Progress'])[:15]  # Max 15 chars
+        duration = f"{(end_timestamp - start_timestamp).seconds // 60} minutes"  # Random duration
+        location = fake.city()[:15]  # Max 15 chars
+        additional_details = fake.text(max_nb_chars=500)[:999]  # Max 999 chars
+        error_details = fake.word()[:50]  # Max 50 chars
+        created_datetime = datetime.now()
+        modified_datetime = created_datetime
+        created_by = fake.name()[:50]  # Max 50 chars
+        modified_by = fake.name()[:50]  # Max 50 chars
+        is_active = random.choice([True, False])
+        user_id = random.choice(user_ids)  # Random UserID from existing users
+        usage_id = random.choice(usage_ids)  # Random UsageID from existing usage records
+
+        # Append the synthetic entry to the data list
+        data.append([
+            activity_id, start_timestamp, end_timestamp, activity_type,
+            source, status, duration, location, additional_details,
+            error_details, created_datetime, modified_datetime,
+            created_by, modified_by, is_active, user_id, usage_id
+        ])
+
+    columns = [
+        "ActivityID", "StartTimestamp", "EndTimestamp", "ActivityType",
+        "Source", "Status", "Duration", "Location", "AdditionalDetails",
+        "ErrorDetails", "CreatedDateTime", "ModifiedDateTime",
+        "CreatedBy", "ModifiedBy", "IsActive", "UserID", "UsageID"
+    ]
+    
+    return pd.DataFrame(data, columns=columns)
+
+# Generate synthetic data
+num_entries = 1000  # Specify the number of entries you want for ActivityDetails
+num_users = 100  # Specify how many users exist
+num_usage = 1000  # Specify how many usage records exist
+
+
+# Create data for ActivityDetails
+activity_details_data = create_activity_details(num_entries, user_ids, usage_ids)
+
+# Specify the directory where you want to save the file
+directory = r"C:\path\to\your\directory"  # Change this to your desired path
+
+# Save to CSV
+activity_details_filename = os.path.join(directory, f'activity_details_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
+
+# Save the ActivityDetails dataframe to CSV
+activity_details_data.to_csv(activity_details_filename, index=False)
+
+# Print confirmation
+print(f"Generated {num_entries} records for ActivityDetails.")
+print(f"Data saved to {activity_details_filename}")
