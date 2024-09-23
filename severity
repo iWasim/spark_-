@@ -1,0 +1,47 @@
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("Filter Anomalies by Severity") \
+    .getOrCreate()
+
+# Read the JSON file
+df = spark.read.json("path/to/your/json/file.json")
+
+# Show the original DataFrame (optional)
+df.show()
+
+# Collect the DataFrame to a list of rows
+rows = df.collect()
+
+# Initialize a list to hold high severity data
+high_severity_data = []
+
+# Loop through each row and apply if-else logic
+for row in rows:
+    severity = row.anomalies.severity
+    if severity == "high":
+        # Perform action for high severity
+        print(f"High severity detected: {row}")
+        high_severity_data.append(row)
+    elif severity == "medium":
+        # Perform action for medium severity
+        print(f"Medium severity detected: {row}")
+    elif severity == "low":
+        # Perform action for low severity
+        print(f"Low severity detected: {row}")
+    else:
+        # Handle unknown severity
+        print(f"Unknown severity: {row}")
+
+# Convert high severity data back to a DataFrame
+high_severity_df = spark.createDataFrame(high_severity_data)
+
+# Write the high severity data to blob storage
+high_severity_df.write \
+    .format("json") \
+    .mode("overwrite") \
+    .save("path/to/your/blob/storage/high_severity")
+
+# Stop the Spark session
+spark.stop()
