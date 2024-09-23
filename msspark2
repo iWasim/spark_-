@@ -1,0 +1,61 @@
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder.getOrCreate()
+
+def read_all_device_files(base_path):
+    # Step 1: List all device ID directories
+    device_dirs = mssparkutils.fs.ls(base_path)
+
+    # Step 2: Loop through each device ID directory
+    for device_dir in device_dirs:
+        device_id = device_dir.name  # Get the device ID from the directory name
+        
+        # Construct the path for the current device ID
+        device_path = f"{base_path}{device_id}/data/"
+        
+        try:
+            # List all year directories
+            year_dirs = mssparkutils.fs.ls(device_path)
+            for year_dir in year_dirs:
+                year_path = year_dir.path
+                # List all month directories
+                month_dirs = mssparkutils.fs.ls(year_path)
+                for month_dir in month_dirs:
+                    month_path = month_dir.path
+                    # List all day directories
+                    day_dirs = mssparkutils.fs.ls(month_path)
+                    for day_dir in day_dirs:
+                        day_path = day_dir.path
+
+                        # List all files in the day directory
+                        files = mssparkutils.fs.ls(day_path)
+
+                        # Step 3: Loop through each file and read it
+                        for file in files:
+                            file_path = file.path
+                            
+                            if file_path.endswith(".json"):
+                                # Read JSON file
+                                df = spark.read.json(file_path)
+                                # Process the DataFrame as needed
+                                df.show()  # Example action
+                            elif file_path.endswith(".csv"):
+                                # Read CSV file
+                                df = spark.read.csv(file_path, header=True, inferSchema=True)
+                                # Process the DataFrame as needed
+                                df.show()  # Example action
+                            elif file_path.endswith(".xml"):
+                                # Read XML file (ensure you have the necessary libraries)
+                                df = spark.read.format("com.databricks.spark.xml").option("rowTag", "yourRowTag").load(file_path)
+                                # Process the DataFrame as needed
+                                df.show()  # Example action
+                            else:
+                                print(f"Unsupported file format: {file_path}")
+        
+        except Exception as e:
+            print(f"Error reading files for device {device_id}: {str(e)}")
+
+# Example usage
+base_path = "abfss://<your-container>@<your-storage-account>.dfs.core.windows.net/"
+read_all_device_files(base_path)
