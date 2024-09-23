@@ -45,3 +45,36 @@ high_severity_df.write \
 
 # Stop the Spark session
 spark.stop()
+
+
+
+#==============================
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("Filter Anomalies") \
+    .getOrCreate()
+
+# Read the JSON file
+df = spark.read.json("path/to/your/json/file.json")
+
+# Show the original DataFrame (optional)
+df.show()
+
+# Filter the DataFrame based on severity
+filtered_df = df.filter(col("anomalies.severity") == "high")
+
+# Show the filtered DataFrame (optional)
+filtered_df.show()
+
+# Write the filtered data to blob storage
+filtered_df.write \
+    .format("json") \
+    .mode("overwrite") \
+    .save("path/to/your/blob/storage")
+
+# Stop the Spark session
+spark.stop()
