@@ -1,0 +1,42 @@
+###########mssparkutils
+
+# Import necessary libraries
+from pyspark.sql import SparkSession
+from mssparkutils import mssparkutils
+
+# Initialize Spark session
+spark = SparkSession.builder.appName("ListFiles").getOrCreate()
+
+def list_files_recursively(base_path, folder_name):
+    # Create a list to hold all file paths
+    file_paths = []
+
+    # Use mssparkutils to list files in the base path
+    all_files = mssparkutils.fs.ls(base_path)
+
+    # Iterate through the files and directories
+    for item in all_files:
+        # Check if the item is a directory
+        if item.isDir:
+            # Recursively call the function for subdirectories
+            sub_dir_paths = list_files_recursively(item.path, folder_name)
+            file_paths.extend(sub_dir_paths)
+        else:
+            # Check if the file path contains the specified folder name
+            if folder_name in item.path:
+                # Get the path after the container name
+                relative_path = item.path.split(f"{base_path}")[-1]
+                file_paths.append(relative_path)
+
+    return file_paths
+
+# Define your base path and folder name
+base_path = "abfss://<your-container-name>@<your-storage-account-name>.dfs.core.windows.net/"
+folder_name = "device"  # This will match device1, device2, etc.
+
+# Get the list of file paths
+result_file_paths = list_files_recursively(base_path, folder_name)
+
+# Display the results
+for path in result_file_paths:
+    print(path)
